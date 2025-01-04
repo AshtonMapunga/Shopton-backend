@@ -10,10 +10,7 @@ const adminSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    profilePicture: {
-        type: String,
-        required: true,
-    },
+  
     email: {
         type: String,
         unique: true,
@@ -27,6 +24,8 @@ const adminSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    role: { type: String, default: 'admin', enum: ['admin'], required: true },
+
 });
 
 // Hash password before saving

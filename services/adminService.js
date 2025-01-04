@@ -1,4 +1,4 @@
-const Admin = require('../models/admin/admin_schema'); // Adjust the path as per your project structure
+const Admin = require('../models/admin/admin_schema'); 
 
 // Service to create a new admin
 const createAdmin = async (adminData) => {

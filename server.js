@@ -2,17 +2,22 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const bodyParser = require('body-parser');
-const clientRouter = require('./router/clientRouter.js'); // Adjust the path as per your project structure
-const familyMembeRouter = require('./router/familyMemberRouter.js'); // Adjust the path as per your project structure
-const employeeRouter = require('./router/employeeRouter.js'); // Adjust the path as per your project structure
-const adminRouter = require('./router/adminRouter.js'); // Adjust the path as per your project structure
-const visitRouter = require('./router/visitRouter.js'); // Adjust the path as per your project structure
-const taskRouter = require('./router/taskRouter.js'); 
-const medicineRouter = require('./router/medicineRouter.js'); 
-const observationRouter = require('./router/observationRouter.js'); 
-const invoiceRouter = require('./router/invoiceRouter.js'); 
 
-const url = "mongodb://localhost:27017/Care_Profsional_App";
+
+const adminRouter = require('./router/adminRouter.js'); // Adjust the path as per your project structure
+
+const teacherRouter = require('./router/teacherRouter.js'); 
+const studentRouter = require('./router/studentRouter.js'); 
+const classRouter = require('./router/classRoute.js'); 
+const quizeRouter = require('./router/quizeRouter.js'); 
+const subjectRouter = require('./router/subjectRouter.js'); 
+
+
+
+
+
+
+const url = "mongodb+srv://sebatech2024:xcGRZSYqgiLbwbO0@escholar.f51th.mongodb.net/";
 
 const app = express();
 
@@ -30,15 +35,19 @@ app.use(bodyParser.json());
 app.use(express.json());
 
 // Register routes
-app.use('/api/v1/clients', clientRouter);
-app.use('/api/v1/family_member', familyMembeRouter);
-app.use('/api/v1/employee', employeeRouter);
+
 app.use('/api/v1/admin_route', adminRouter);
-app.use('/api/v1/visit_route', visitRouter);
-app.use('/api/v1/task_route', taskRouter);
-app.use('/api/v1/medication_route', medicineRouter);
-app.use('/api/v1/observation_route', observationRouter);
-app.use('/api/v1/invoice_route', invoiceRouter);
+
+
+app.use('/api/v1/teacher_route', teacherRouter);
+app.use('/api/v1/student_route', studentRouter);
+app.use('/api/v1/class_route', classRouter);
+app.use('/api/v1/quize_route', quizeRouter);
+app.use('/api/v1/subject_route', subjectRouter);
+
+
+
+
 
 const Port = 4071;
 app.listen(Port, () => {
