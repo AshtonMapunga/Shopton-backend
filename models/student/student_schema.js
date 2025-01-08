@@ -3,6 +3,8 @@ const bcrypt = require("bcryptjs");
 
 const studentSchema = new mongoose.Schema({
     name: { type: String, required: true },
+    school: { type: String, required: true },
+    level: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     role: { type: String, default: 'student', enum: ['student'], required: true },

@@ -11,6 +11,11 @@ const studentRouter = require('./router/studentRouter.js');
 const classRouter = require('./router/classRoute.js'); 
 const quizeRouter = require('./router/quizeRouter.js'); 
 const subjectRouter = require('./router/subjectRouter.js'); 
+const schoolRouter = require('./router/schoolRouter.js'); 
+const levelRouter = require('./router/levelRouter.js'); 
+const bannerRouter = require('./router/bannerRouter.js'); 
+
+
 
 
 
@@ -44,6 +49,11 @@ app.use('/api/v1/student_route', studentRouter);
 app.use('/api/v1/class_route', classRouter);
 app.use('/api/v1/quize_route', quizeRouter);
 app.use('/api/v1/subject_route', subjectRouter);
+app.use('/api/v1/school_route', schoolRouter);
+app.use('/api/v1/banner_route', bannerRouter);
+app.use('/api/v1/level_route', levelRouter);
+
+
 
 
 

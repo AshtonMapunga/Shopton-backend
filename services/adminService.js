@@ -18,6 +18,8 @@ const createAdmin = async (adminData) => {
     }
 };
 
+
+
 // Service to get all admins
 const getAllAdmins = async () => {
     try {

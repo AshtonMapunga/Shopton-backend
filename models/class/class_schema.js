@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 
 const ClassSchema = new mongoose.Schema({
     name: { type: String, required: true }, // Name of the class (e.g., Grade 10A)
+    level: { type: String, required: true }, // Name of the class (e.g., Grade 10A)
     teacherId: { type: mongoose.Schema.Types.ObjectId, ref: 'Teacher', required: true }, // Assigned teacher
     students: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Student' }], // Students in the class
     timetable: [{

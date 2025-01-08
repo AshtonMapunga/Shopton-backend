@@ -2,23 +2,85 @@ const express = require('express');
 const router = express.Router();
 const studentService = require('../services/studentService'); // Adjust the path as per your project structure
 const { authenticateToken } = require('../middleware/auth'); // Assuming you have an auth middleware for JWT authentication
-
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
 // Route to create a new student
-router.post('/create', async (req, res) => {
+
+
+
+router.post('/signup', async (req, res) => {
     try {
         const studentData = req.body;
+
+        // Hash the password before saving
+
         const newStudent = await studentService.createStudent(studentData);
+
+        // Generate a token for the new admin
+        const token = jwt.sign(
+            { id: newStudent._id, email: newStudent.email },
+            'codicoso2023', // Replace with a secure key
+            { expiresIn: '7h' } // Token validity: 1 hour
+        );
+
         res.status(201).json({
-            message: 'Student created successfully',
+            message: 'Student  registered successfully',
             data: newStudent,
+            token,
         });
     } catch (error) {
         if (error.message === 'Email already exists') {
             return res.status(409).json({ message: 'Email already exists' });
         }
-        res.status(400).json({ message: 'Error creating student', error: error.message });
+        res.status(400).json({ message: 'Error registering student', error: error.message });
     }
 });
+
+
+
+
+
+
+
+router.post('/login', async (req, res) => {
+    try {
+        const { email, password } = req.body;
+
+        // Check if admin exists
+        const student = await studentService.getStudentByEmail(email);
+        if (!student) {
+            return res.status(404).json({ message: 'Student not found' });
+        }
+
+        // Validate password
+        const isPasswordValid = await bcrypt.compare(password, student.password);
+console.log('Entered Password:', password);
+console.log('Stored Hashed Password:', student.email);
+console.log('Password Validity:', isPasswordValid);
+
+        if (!isPasswordValid) {
+            return res.status(401).json({ message: 'Invalid credentials' });
+        }
+
+        // Generate JWT token
+        const token = jwt.sign(
+            { id: student._id, email: student.email },
+            'codicoso2023', // Replace 'your_jwt_secret' with a secure key
+            { expiresIn: '2h' }
+        );
+
+        res.status(200).json({ message: 'Login successful', token });
+    } catch (error) {
+        res.status(500).json({ message: 'Login failed', error: error.message });
+    }
+});
+
+
+
+
+
+
+
 
 // Route to fetch all students (secured)
 router.get('/getallstudents', authenticateToken, async (req, res) => {
