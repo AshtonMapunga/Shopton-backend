@@ -3,7 +3,7 @@ const router = express.Router();
 const LibraryService = require('../services/libraryService'); // Adjust the path as needed
 
 // Create a new library entry
-router.post('/', async (req, res) => {
+router.post('/create', async (req, res) => {
     try {
         const libraryData = req.body;
         const newLibrary = await LibraryService.createLibrary(libraryData);
@@ -14,7 +14,7 @@ router.post('/', async (req, res) => {
 });
 
 // Get all library entries
-router.get('/', async (req, res) => {
+router.get('/getall', async (req, res) => {
     try {
         const libraries = await LibraryService.getAllLibraries();
         res.status(200).json(libraries);

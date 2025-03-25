@@ -13,6 +13,7 @@ const studentSchema = new mongoose.Schema({
     results: [{
         subjectId: { type: mongoose.Schema.Types.ObjectId, ref: 'Subject' },
         marks: { type: Number },
+        quiz: { type: mongoose.Schema.Types.ObjectId, ref: 'Quiz' }, // FIXED ERROR HERE
     }], // Academic results for the student
     libraryAccess: { type: Boolean, default: true }, // Access to the library
 }, { timestamps: true });

@@ -30,7 +30,7 @@ console.log('Password Validity:', isPasswordValid);
         const token = jwt.sign(
             { id: admin._id, email: admin.email },
             'codicoso2023', // Replace 'your_jwt_secret' with a secure key
-            { expiresIn: '2h' }
+            { expiresIn: '12h' }
         );
 
         res.status(200).json({ message: 'Login successful', token });
