@@ -1,5 +1,6 @@
-const PayCourse = require("../models/PayCourse");
 const Paynow = require("paynow");
+const PayCourse = require('../models/payment/payment_schema'); // Adjust the path as needed
+
 
 // Initialize Paynow
 const paynow = new Paynow("20035", "57832f6f-bd15-4877-81be-c8e30e390a88");

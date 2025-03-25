@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { Paynow } = require("paynow");
-const PayCourse = require('../models/pay_course_schema');
+const PayCourse = require('../models/payment/payment_schema');
 
 
 
@@ -31,13 +31,12 @@ router.post('/web-paynow-me', async (req, res) => {
                     customerEmail,
                     customerPhoneNumber,
                     category,
-                    courseImage,
+                    classImage,
                     currency,
                     description,
                     duration,
                     level,
                     price,
-                    title,
                     showPayment,
                     isPaid,
                     paymentStatus,

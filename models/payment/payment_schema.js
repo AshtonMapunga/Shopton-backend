@@ -55,7 +55,7 @@ const PayClassSchema = new mongoose.Schema(
       type: Number,
       required: true
     },
-
+ 
     paymentStatus: {
       type: String,
       enum: ["Pending", "Paid", "Failed"],

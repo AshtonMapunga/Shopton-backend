@@ -16,7 +16,6 @@ const levelRouter = require('./router/levelRouter.js');
 const bannerRouter = require('./router/bannerRouter.js'); 
 const libRouter = require('./router/libraryRouter.js'); 
 const payCourse = require("./router/paymentRouter");
-const emailRouter = require("./router/emailRouter");
 
 
 
@@ -59,7 +58,6 @@ app.use('/api/v1/level_route', levelRouter);
 app.use('/api/v1/library_route', libRouter);
 
 app.use('/api/v1/pay_route', payCourse);
-app.use('/api/v1/email_router', emailRouter);
 
 
 
