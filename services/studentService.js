@@ -30,7 +30,7 @@ const getAllStudents = async () => {
 // Service to fetch a student by email
 const getStudentByEmail = async (email) => {
     try {
-        return await Student.findOne({ email }).populate('classId subjects results.subjectId');
+        return await Student.findOne({ email });
     } catch (error) {
         throw new Error(error.message);
     }
