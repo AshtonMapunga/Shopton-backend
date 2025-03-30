@@ -21,7 +21,7 @@ const createStudent = async (studentData) => {
 // Service to get all students
 const getAllStudents = async () => {
     try {
-        return await Student.find().populate('classId subjects results.subjectId');
+        return await Student.find();
     } catch (error) {
         throw new Error(error.message);
     }
