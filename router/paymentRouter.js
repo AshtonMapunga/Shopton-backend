@@ -6,14 +6,14 @@ const PayCourse = require('../models/payment/payment_schema');
 
 
 router.post('/web-paynow-me', async (req, res) => {
-    const paynow = new Paynow("20035", "57832f6f-bd15-4877-81be-c8e30e390a88");
+    const paynow = new Paynow("20347", "5a02df07-d7eb-4e45-b484-dca67ddb36af");
     paynow.resultUrl = "http://example.com/gateways/paynow/update";
     paynow.returnUrl = "http://example.com/return?gateway=paynow&merchantReference=1234";
     
     try {
         const { 
             customerName, customerEmail, customerPhoneNumber, category, 
-            courseImage, currency, description, duration, level, price, 
+            classImage, currency, description, duration, level, price, 
             title, showPayment, isPaid, paymentStatus 
         } = req.body;
 
@@ -64,13 +64,13 @@ router.post('/web-paynow-me', async (req, res) => {
 
 
 const processMobilePayment = async (req, res, method) => {
-    const paynow = new Paynow("20035", "57832f6f-bd15-4877-81be-c8e30e390a88");
+    const paynow = new Paynow("20347", "5a02df07-d7eb-4e45-b484-dca67ddb36af");
     paynow.resultUrl = "http://example.com/gateways/paynow/update";
     paynow.returnUrl = "http://example.com/return?gateway=paynow&merchantReference=1234";
     try {
         const { 
             customerName, customerEmail, customerPhoneNumber, category, 
-            courseImage, currency, description, duration, level, price, 
+            classImage, currency, description, duration, level, price, 
             title, showPayment, isPaid, paymentStatus 
         } = req.body;
 
@@ -88,7 +88,7 @@ const processMobilePayment = async (req, res, method) => {
                 customerEmail,
                 customerPhoneNumber,
                 category,
-                courseImage,
+                classImage,
                 currency,
                 description,
                 duration,
@@ -117,7 +117,7 @@ router.post('/mobile-netone-paynow-me', (req, res) => processMobilePayment(req, 
 router.post('/mobile-telone-paynow-me', (req, res) => processMobilePayment(req, res, Paynow.Methods.TELECASH));
 
 router.post('/check-status', async (req, res) => {
-    const paynow = new Paynow("20035", "57832f6f-bd15-4877-81be-c8e30e390a88");
+    const paynow = new Paynow("20347", "5a02df07-d7eb-4e45-b484-dca67ddb36af");
     paynow.resultUrl = "http://example.com/gateways/paynow/update";
     paynow.returnUrl = "http://example.com/return?gateway=paynow&merchantReference=1234";
 

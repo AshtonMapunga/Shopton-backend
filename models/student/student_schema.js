@@ -7,9 +7,14 @@ const studentSchema = new mongoose.Schema({
     level: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
+    enrolledClasses: [
+        {
+            classId:  { type: String, required: true },
+            paymentStatus: { type: String, required: true }
+        }
+    ],
     role: { type: String, default: 'student', enum: ['student'], required: true },
-    classId: { type: mongoose.Schema.Types.ObjectId, ref: 'Class', required: true }, // The class the student belongs to
-    subjects: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Subject' }], // Subjects the student is enrolled in
+    subjects: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Subject' }],
     results: [{
         subjectId: { type: mongoose.Schema.Types.ObjectId, ref: 'Subject' },
         marks: { type: Number },

@@ -3,7 +3,7 @@ const PayCourse = require('../models/payment/payment_schema'); // Adjust the pat
 
 
 // Initialize Paynow
-const paynow = new Paynow("20035", "57832f6f-bd15-4877-81be-c8e30e390a88");
+const paynow = new Paynow("	20347", "5a02df07-d7eb-4e45-b484-dca67ddb36af");
 
 // Create a new payment
 const makePayment = async (paymentData) => {

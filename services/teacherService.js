@@ -47,6 +47,8 @@ const getTeacherById = async (id) => {
     }
 };
 
+
+
 // Service to update a teacher
 const updateTeacher = async (id, updateData) => {
     try {

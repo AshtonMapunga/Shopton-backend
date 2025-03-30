@@ -15,12 +15,8 @@ const schoolRouter = require('./router/schoolRouter.js');
 const levelRouter = require('./router/levelRouter.js'); 
 const bannerRouter = require('./router/bannerRouter.js'); 
 const libRouter = require('./router/libraryRouter.js'); 
-const payCourse = require("./router/paymentRouter");
-
-
-
-
-
+const payCourse = require('./router/paymentRouter.js');
+const payRef = require('./router/paymentRefRouter.js');
 
 
 
@@ -58,6 +54,8 @@ app.use('/api/v1/level_route', levelRouter);
 app.use('/api/v1/library_route', libRouter);
 
 app.use('/api/v1/pay_route', payCourse);
+app.use('/api/v1/payref_route', payRef);
+
 
 
 
