@@ -9,12 +9,12 @@ class PaymentRefService {
 
     // Get all library entries
     static async getAllPaymentRef() {
-        return await PaymentRef.find().populate('students', 'name email'); // Adjust populated fields as needed
-    }
+        return await PaymentRef.find(); // Adjust populated fields as needed
+        }
 
     // Get a single library entry by ID
     static async getPaymentRefById(id) {
-        return await PaymentRef.findById(id).populate('students', 'name email');
+        return await PaymentRef.findById(id);
     }
 
     // Update a library entry
