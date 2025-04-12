@@ -5,6 +5,7 @@ const LessonSchema = new mongoose.Schema({
     lessontitle: { type: String, required: true },
     lessonDescription: { type: String, required: true }, // Fixed typo from "lessonDecsription" to "lessonDescription"
     uploadedfiles: [{ type: String, default: [] }], // Default to an empty array if no files are uploaded
+    lessonQuizeID: { type: String, required: true },
     videoResources: [
         {
             title: { type: String, required: true },
@@ -18,7 +19,8 @@ const LessonSchema = new mongoose.Schema({
             url: { type: String, required: true },
             type: { type: String, required: true }
         }
-    ]
+    ],
+   
 
 });
 

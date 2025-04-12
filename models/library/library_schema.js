@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 
 const librarySchema = new mongoose.Schema({
     title: { type: String, required: true }, // Title of the book
+    level: { type: String, required: true }, 
     category: { type: String, required: true }, // Title of the book
     coverimageurl: { type: String, required: true }, // Title of the book
     author: { type: String, required: true }, // Author of the book

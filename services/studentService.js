@@ -4,9 +4,9 @@ const Student = require('../models/student/student_schema'); // Adjust the path 
 const createStudent = async (studentData) => {
     try {
         // Check if email already exists
-        const existingStudent = await Student.findOne({ email: studentData.email });
+        const existingStudent = await Student.findOne({ phoneNumber: studentData.phoneNumber });
         if (existingStudent) {
-            throw new Error('Email already exists');
+            throw new Error('PhoneNumber already exists');
         }
 
         // Create and save a new student
@@ -28,9 +28,9 @@ const getAllStudents = async () => {
 };
 
 // Service to fetch a student by email
-const getStudentByEmail = async (email) => {
+const getStudentByphoneNumber = async (phoneNumber) => {
     try {
-        return await Student.findOne({ email });
+        return await Student.findOne({ phoneNumber });
     } catch (error) {
         throw new Error(error.message);
     }
@@ -121,7 +121,7 @@ const updateStudentResults = async (studentId, subjectId, marks) => {
 module.exports = {
     createStudent,
     getAllStudents,
-    getStudentByEmail,
+    getStudentByphoneNumber,
     getStudentById,
     updateStudent,
     deleteStudent,

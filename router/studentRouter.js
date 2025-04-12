@@ -95,10 +95,9 @@ router.get('/getallstudents', authenticateToken, async (req, res) => {
     }
 });
 
-// Route to fetch a student by email (secured)
-router.get('/getstudentbyemail/:email', authenticateToken, async (req, res) => {
+router.get('/getstudentbyPhoneNumber/:phoneNumber', authenticateToken, async (req, res) => {
     try {
-        const student = await studentService.getStudentByEmail(req.params.email);
+        const student = await studentService.getStudentByphoneNumber(req.params.phoneNumber);
         if (!student) {
             return res.status(404).json({ message: 'Student not found' });
         }
