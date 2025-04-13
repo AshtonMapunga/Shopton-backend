@@ -21,6 +21,8 @@ const studentSchema = new mongoose.Schema({
         marks: { type: Number },
         quiz: { type: mongoose.Schema.Types.ObjectId, ref: 'Quiz' }, // FIXED ERROR HERE
     }],
+    aiaccess: { type: String},
+
 
 
     submitedQuize: [{
