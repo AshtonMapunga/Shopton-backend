@@ -18,7 +18,7 @@ router.post('/signup', async (req, res) => {
 
         // Generate a token for the new admin
         const token = jwt.sign(
-            { id: newStudent._id, email: newStudent.email },
+            { id: newStudent._id, phoneNumber: newStudent.phoneNumber },
             'codicoso2023', // Replace with a secure key
             { expiresIn: '12h' } // Token validity: 1 hour
         );
@@ -29,8 +29,8 @@ router.post('/signup', async (req, res) => {
             token,
         });
     } catch (error) {
-        if (error.message === 'Email already exists') {
-            return res.status(409).json({ message: 'Email already exists' });
+        if (error.message === 'phoneNumber already exists') {
+            return res.status(409).json({ message: 'phoneNumber already exists' });
         }
         res.status(400).json({ message: 'Error registering student', error: error.message });
     }
@@ -44,10 +44,10 @@ router.post('/signup', async (req, res) => {
 
 router.post('/login', async (req, res) => {
     try {
-        const { email, password } = req.body;
+        const { phoneNumber, password } = req.body;
 
         // Check if admin exists
-        const student = await studentService.getStudentByEmail(email);
+        const student = await studentService.getStudentByphoneNumber(phoneNumber);
         if (!student) {
             return res.status(404).json({ message: 'Student not found' });
         }
@@ -55,7 +55,7 @@ router.post('/login', async (req, res) => {
         // Validate password
         const isPasswordValid = await bcrypt.compare(password, student.password);
 console.log('Entered Password:', password);
-console.log('Stored Hashed Password:', student.email);
+console.log('Stored Hashed Password:', student.phoneNumber);
 console.log('Password Validity:', isPasswordValid);
 
         if (!isPasswordValid) {
@@ -64,7 +64,7 @@ console.log('Password Validity:', isPasswordValid);
 
         // Generate JWT token
         const token = jwt.sign(
-            { id: student._id, email: student.email },
+            { id: student._id, phoneNumber: student.phoneNumber },
             'codicoso2023', // Replace 'your_jwt_secret' with a secure key
             { expiresIn: '12h' }
         );

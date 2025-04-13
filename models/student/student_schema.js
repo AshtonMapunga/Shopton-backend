@@ -20,7 +20,20 @@ const studentSchema = new mongoose.Schema({
         subjectId: { type: mongoose.Schema.Types.ObjectId, ref: 'Subject' },
         marks: { type: Number },
         quiz: { type: mongoose.Schema.Types.ObjectId, ref: 'Quiz' }, // FIXED ERROR HERE
-    }], // Academic results for the student
+    }],
+
+
+    submitedQuize: [{
+        name: { type: String},
+        marks: { type: String },
+        recommendation: { type: String },
+        quizID: { type: String  }, 
+        dateSubmited: { type: String  }, 
+
+    }], 
+    
+    
+
     libraryAccess: { type: Boolean, default: true }, // Access to the library
 }, { timestamps: true });
 
