@@ -6,7 +6,7 @@ const PayCourse = require('../models/payment/payment_schema');
 
 
 router.post('/web-paynow-me', async (req, res) => {
-    const paynow = new Paynow("20347", "5a02df07-d7eb-4e45-b484-dca67ddb36af");
+    const paynow = new Paynow("20638", "c8b70b5c-fe2a-49c3-93ed-08167095d97a");
     paynow.resultUrl = "http://example.com/gateways/paynow/update";
     paynow.returnUrl = "http://example.com/return?gateway=paynow&merchantReference=1234";
     
@@ -64,7 +64,7 @@ router.post('/web-paynow-me', async (req, res) => {
 
 
 const processMobilePayment = async (req, res, method) => {
-    const paynow = new Paynow("20347", "5a02df07-d7eb-4e45-b484-dca67ddb36af");
+    const paynow = new Paynow("20638", "c8b70b5c-fe2a-49c3-93ed-08167095d97a");
     paynow.resultUrl = "http://example.com/gateways/paynow/update";
     paynow.returnUrl = "http://example.com/return?gateway=paynow&merchantReference=1234";
     try {
@@ -115,9 +115,10 @@ const processMobilePayment = async (req, res, method) => {
 router.post('/mobile-ecocash-paynow-me', (req, res) => processMobilePayment(req, res, 'ecocash'));
 router.post('/mobile-netone-paynow-me', (req, res) => processMobilePayment(req, res, Paynow.Methods.ONEMONEY));
 router.post('/mobile-telone-paynow-me', (req, res) => processMobilePayment(req, res, Paynow.Methods.TELECASH));
+router.post('/mobile-inbucks-paynow-me', (req, res) => processMobilePayment(req, res, Paynow.Methods.INBUCKS));
 
 router.post('/check-status', async (req, res) => {
-    const paynow = new Paynow("20347", "5a02df07-d7eb-4e45-b484-dca67ddb36af");
+    const paynow = new Paynow("20638", "c8b70b5c-fe2a-49c3-93ed-08167095d97a");
     paynow.resultUrl = "http://example.com/gateways/paynow/update";
     paynow.returnUrl = "http://example.com/return?gateway=paynow&merchantReference=1234";
 
