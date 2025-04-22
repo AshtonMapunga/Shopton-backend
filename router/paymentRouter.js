@@ -165,5 +165,20 @@ router.get('/paycourses/:customerEmail', async (req, res) => {
     }
 });
 
+router.get('/paymentHistory/:customerPhoneNumber', async (req, res) => {
+    try {
+        const { customerPhoneNumber } = req.params;
+        const payCourses = await PayCourse.find({ customerPhoneNumber });
+
+        if (payCourses.length === 0) {
+            return res.status(404).json({ message: "No payment history found for this user." });
+        }
+
+        res.status(200).json(payCourses);
+    } catch (error) {
+        res.status(500).json({ error: "An error occurred while retrieving payment history.", details: error.message });
+    }
+});
+
 
 module.exports = router;
