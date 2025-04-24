@@ -11,16 +11,16 @@ const studentSchema = new mongoose.Schema({
     password: { type: String, required: true },
     enrolledClasses: [
         {
-            classId:  { type: String, required: true },
-            paymentStatus: { type: String, required: true }
+          classIds: { type: [String], required: true },
+          paymentStatus: { type: String, required: true }
         }
-    ],
+      ],
     role: { type: String, default: 'student', enum: ['student'], required: true },
     subjects: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Subject' }],
     results: [{
         subjectId: { type: mongoose.Schema.Types.ObjectId, ref: 'Subject' },
         marks: { type: Number },
-        quiz: { type: mongoose.Schema.Types.ObjectId, ref: 'Quiz' }, // FIXED ERROR HERE
+        quiz: { type: mongoose.Schema.Types.ObjectId, ref: 'Quiz' },
     }],
     aiaccess: { type: String},
 
@@ -49,3 +49,7 @@ studentSchema.pre("save", async function(next) {
 });
 
 module.exports = mongoose.model("Student", studentSchema);
+
+
+
+
