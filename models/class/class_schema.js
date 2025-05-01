@@ -35,6 +35,7 @@ const ClassSchema = new mongoose.Schema({
     name: { type: String, required: true }, 
     classstatus: { type: String, required: true }, 
     ratings: { type: String, required: true }, 
+    schoolID: { type: String, required: true }, 
     level: { type: String, required: true },
     meetinglink: { type: String, },
     classpageimageurl: { type: String, required: true },  

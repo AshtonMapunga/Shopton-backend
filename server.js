@@ -18,6 +18,8 @@ const libRouter = require('./router/libraryRouter.js');
 const payCourse = require('./router/paymentRouter.js');
 const payRef = require('./router/paymentRefRouter.js');
 const realmRef = require('./router/realsRouter.js');
+const examppr = require('./router/exampapersRouter.js');
+
 
 
 
@@ -59,6 +61,8 @@ app.use('/api/v1/pay_route', payCourse);
 app.use('/api/v1/payref_route', payRef);
 
 app.use('/api/v1/realm_route', realmRef);
+app.use('/api/v1/exampaper_route', examppr);
+
 
 
 

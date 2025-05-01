@@ -4,7 +4,7 @@ const bcrypt = require("bcryptjs");
 const studentSchema = new mongoose.Schema({
     name: { type: String, required: true },
     email: { type: String,  },
-    school: { type: String, required: true },
+    schoolID: { type: String, required: true },
     profilepicture: { type: String, required: true },
     level: { type: String, required: true },
     phoneNumber: { type: String, required: true, unique: true },
@@ -13,6 +13,12 @@ const studentSchema = new mongoose.Schema({
         {
           classIds: { type: [String], required: true },
           paymentStatus: { type: String, required: true }
+        }
+      ],
+      paidExamPapers: [
+        {
+          exampapersIDs: { type: [String], required: true },
+          access: { type: String, required: true }
         }
       ],
     role: { type: String, default: 'student', enum: ['student'], required: true },
