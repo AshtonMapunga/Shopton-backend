@@ -5,7 +5,14 @@ const examPapersSchema = new mongoose.Schema({
     title: { type: String, required: true }, 
     level: { type: String, required: true }, 
     fileUrl: { type: String, required: true }, 
-    access: { type: String, required: true }, 
+    access: { type: String, required: true },
+    questions: [{
+        questionText: { type: String, required: true }, 
+        options: [{ type: String, required: true }],
+        correctAnswer: { type: String, required: true },
+        comment: { type: String, required: true },
+
+    }], 
   
   
 }, { timestamps: true });
