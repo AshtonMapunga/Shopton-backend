@@ -40,6 +40,15 @@ const studentSchema = new mongoose.Schema({
         dateSubmited: { type: String  }, 
 
     }], 
+
+
+    submitedExamPapers: [{
+      name: { type: String},
+      marks: { type: String },
+      recommendation: { type: String },
+      dateSubmited: { type: String  }, 
+
+  }], 
     
     
 
