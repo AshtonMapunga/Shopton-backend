@@ -49,6 +49,16 @@ const studentSchema = new mongoose.Schema({
       dateSubmited: { type: String  }, 
 
   }], 
+
+
+
+  paidExamPapers: [{
+    exampaperID: { type: String},
+    examType: { type: String },
+    title: { type: String },
+    datePaid: { type: String  }, 
+
+}], 
     
     
 
