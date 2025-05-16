@@ -25,7 +25,9 @@ const examppr = require('./router/exampapersRouter.js');
 
 
 
-const url = "mongodb+srv://sebatech2024:xcGRZSYqgiLbwbO0@escholar.f51th.mongodb.net/";
+// const url = "mongodb+srv://sebatech2024:xcGRZSYqgiLbwbO0@escholar.f51th.mongodb.net/";
+const url = "mongodb+srv://victormoyo33327:Dx3xBzeLfDoLNPOY@cluster0.cocwvfv.mongodb.net";
+
 
 const app = express();
 
@@ -42,7 +44,6 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(express.json());
 
-// Register routes
 
 app.use('/api/v1/admin_route', adminRouter);
 

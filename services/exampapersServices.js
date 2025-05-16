@@ -23,10 +23,40 @@ const createExamPaper = async (examData) => {
 
 
 
+// Update a class by ID
+const updateEP = async (epId, updateData) => {
+  try {
+    const updatedBanner = await ExamPapers.findByIdAndUpdate(epId, updateData, { new: true });
+    if (!updatedBanner) {
+      throw new Error("Exam Paper not found");
+    }
+    return updatedBanner;
+  } catch (error) {
+    throw new Error("Error updating exam paper: " + error.message);
+  }
+};
+
+// Delete a class by ID
+const deleteEP = async (epId) => {
+  try {
+    const deletedBanner = await ExamPapers.findByIdAndDelete(epId);
+    if (!deletedBanner) {
+      throw new Error("exam paper not found");
+    }
+    return deletedBanner;
+  } catch (error) {
+    throw new Error("Error deleting exam paper: " + error.message);
+  }
+};
+
+
+
 
 
 
 module.exports = {
     getAllExamPapers, 
-    createExamPaper
+    createExamPaper,
+    deleteEP,
+    updateEP
 };
