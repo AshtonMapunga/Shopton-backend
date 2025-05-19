@@ -19,16 +19,12 @@ const payCourse = require('./router/paymentRouter.js');
 const payRef = require('./router/paymentRefRouter.js');
 const realmRef = require('./router/realsRouter.js');
 const examppr = require('./router/exampapersRouter.js');
-
-
-
+const notifications = require('./router/notificationsRouter.js');
 
 //hello
 
 const url = "mongodb+srv://sebatech2024:xcGRZSYqgiLbwbO0@escholar.f51th.mongodb.net/";
 // const url = "mongodb+srv://victormoyo33327:Dx3xBzeLfDoLNPOY@cluster0.cocwvfv.mongodb.net/";
-
-
 const app = express();
 
 // MongoDB Connection
@@ -63,6 +59,7 @@ app.use('/api/v1/payref_route', payRef);
 
 app.use('/api/v1/realm_route', realmRef);
 app.use('/api/v1/exampaper_route', examppr);
+app.use('/api/v1/notifications_route', notifications);
 
 
 

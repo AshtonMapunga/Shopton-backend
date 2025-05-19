@@ -68,6 +68,7 @@ console.log('Password Validity:', isPasswordValid);
             'codicoso2023', // Replace 'your_jwt_secret' with a secure key
             { expiresIn: '12h' }
         );
+        console.log('Entered student--------------------:', student);
 
         res.status(200).json({ message: 'Login successful', token });
     } catch (error) {
