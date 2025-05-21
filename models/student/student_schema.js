@@ -11,7 +11,7 @@ const studentSchema = new mongoose.Schema({
     password: { type: String, required: true },
     enrolledClasses: [
         {
-          classIds: { type: [String], required: true },
+          enrolledclassId: { type: String, required: true },
           paymentStatus: { type: String, required: true }
         }
       ],
