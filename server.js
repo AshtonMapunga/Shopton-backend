@@ -4,27 +4,16 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 
 
-const adminRouter = require('./router/adminRouter.js'); // Adjust the path as per your project structure
 
-const teacherRouter = require('./router/teacherRouter.js'); 
-const studentRouter = require('./router/studentRouter.js'); 
-const classRouter = require('./router/classRoute.js'); 
-const quizeRouter = require('./router/quizeRouter.js'); 
-const subjectRouter = require('./router/subjectRouter.js'); 
-const schoolRouter = require('./router/schoolRouter.js'); 
-const levelRouter = require('./router/levelRouter.js'); 
+
 const bannerRouter = require('./router/bannerRouter.js'); 
-const libRouter = require('./router/libraryRouter.js'); 
-const payCourse = require('./router/paymentRouter.js');
-const payRef = require('./router/paymentRefRouter.js');
-const realmRef = require('./router/realsRouter.js');
-const examppr = require('./router/exampapersRouter.js');
-const notifications = require('./router/notificationsRouter.js');
+const productRouter = require('./router/productRouter.js'); 
+const brandRouter = require('./router/brandRouter.js'); 
 
-//hello
 
-const url = "mongodb+srv://sebatech2024:xcGRZSYqgiLbwbO0@escholar.f51th.mongodb.net/";
-// const url = "mongodb+srv://victormoyo33327:Dx3xBzeLfDoLNPOY@cluster0.cocwvfv.mongodb.net/";
+
+
+const url = "mongodb+srv://sebatech2024:xcGRZSYqgiLbwbO0@escholar.f51th.mongodb.net/Shopton";
 const app = express();
 
 // MongoDB Connection
@@ -41,25 +30,13 @@ app.use(bodyParser.json());
 app.use(express.json());
 
 
-app.use('/api/v1/admin_route', adminRouter);
 
 
-app.use('/api/v1/teacher_route', teacherRouter);
-app.use('/api/v1/student_route', studentRouter);
-app.use('/api/v1/class_route', classRouter);
-app.use('/api/v1/quize_route', quizeRouter);
-app.use('/api/v1/subject_route', subjectRouter);
-app.use('/api/v1/school_route', schoolRouter);
 app.use('/api/v1/banner_route', bannerRouter);
-app.use('/api/v1/level_route', levelRouter);
-app.use('/api/v1/library_route', libRouter);
+app.use('/api/v1/product_route', productRouter);
+app.use('/api/v1/brand_route', brandRouter);
 
-app.use('/api/v1/pay_route', payCourse);
-app.use('/api/v1/payref_route', payRef);
 
-app.use('/api/v1/realm_route', realmRef);
-app.use('/api/v1/exampaper_route', examppr);
-app.use('/api/v1/notifications_route', notifications);
 
 
 
