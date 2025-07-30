@@ -11,6 +11,8 @@ const bannerRouter = require('./router/bannerRouter.js');
 const productRouter = require('./router/productRouter.js'); 
 const brandRouter = require('./router/brandRouter.js'); 
 const orderRouter = require('./router/orderRouter.js'); 
+const paymentRouter = require('./router/paymentRouter.js');
+
 
 
 
@@ -39,6 +41,8 @@ app.use('/api/v1/banner_route', bannerRouter);
 app.use('/api/v1/product_route', productRouter);
 app.use('/api/v1/brand_route', brandRouter);
 app.use('/api/v1/order_route', orderRouter);
+app.use('/api/v1/payment_route', paymentRouter);
+
 
 
 

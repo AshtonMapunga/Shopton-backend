@@ -1,0 +1,54 @@
+const mongoose = require('mongoose');
+
+const PaymentSchema = new mongoose.Schema(
+  {
+    pollUrl: {
+      type: String,
+      required: true
+    },
+    isPaid: {
+      type: Boolean,
+      default: false
+    },
+    customerName: {
+      type: String,
+      required: true
+    },
+    customerEmail: {
+      type: String,
+      required: true
+    },
+    customerPhoneNumber: {
+      type: String,
+      required: true
+    },
+    showPayment: {
+      type: Boolean,
+      default: false
+    },
+    currency: {
+      type: String,
+      required: true,
+      default: "USD"
+    },
+    description: {
+      type: String,
+      required: true
+    },
+    price: {
+      type: Number,
+      required: true
+    },
+ 
+    paymentStatus: {
+      type: String,
+      enum: ["Pending", "Paid", "Failed"],
+      default: "Pending"
+    }
+  },
+  {
+    timestamps: true
+  }
+);
+
+module.exports = mongoose.model('Payment', PaymentSchema);
