@@ -1,11 +1,28 @@
 const Order = require("../models/orders/orderSchema");
 
-// Create new order
+
+const generateRandomOrderNumber = () => {
+  const randomStr = Math.random().toString(36).substring(2, 9).toUpperCase(); // 7 chars
+  return `OR-${randomStr}`;
+};
+
 const createOrder = async (orderData) => {
   try {
-    const newOrder = new Order(orderData);
+    if ('orderNumber' in orderData || 'orderNumberFormatted' in orderData) {
+      throw new Error("Order creation error");
+    }
+
+    const formattedOrderNumber = generateRandomOrderNumber();
+
+    const newOrder = new Order({
+      ...orderData,
+      orderNumber: Date.now(), 
+      orderNumberFormatted: formattedOrderNumber
+    });
+
     await newOrder.save();
-    return newOrder;
+
+    return newOrder.toJSON();
   } catch (error) {
     throw new Error("Error creating order: " + error.message);
   }
