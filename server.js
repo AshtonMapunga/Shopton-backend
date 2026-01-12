@@ -12,6 +12,14 @@ const productRouter = require('./router/productRouter.js');
 const brandRouter = require('./router/brandRouter.js'); 
 const orderRouter = require('./router/orderRouter.js'); 
 const paymentRouter = require('./router/paymentRouter.js');
+const serviceTypeRoutes = require("./router/serviceTypeRoutes.js"); 
+const customRequestRoutes = require("./router/customRequestRoutes.js");
+
+
+
+
+
+
 
 
 
@@ -42,10 +50,8 @@ app.use('/api/v1/product_route', productRouter);
 app.use('/api/v1/brand_route', brandRouter);
 app.use('/api/v1/order_route', orderRouter);
 app.use('/api/v1/payment_route', paymentRouter);
-
-
-
-
+app.use("/api/v1/service_type", serviceTypeRoutes); 
+app.use("/api/v1/custom_request", customRequestRoutes);
 
 
 
