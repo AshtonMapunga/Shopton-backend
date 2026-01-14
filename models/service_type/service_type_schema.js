@@ -10,11 +10,39 @@ const ServiceTypeSchema = new mongoose.Schema(
         },
 
       
-        image: {
+        imageurl: {
             type: String,
                         required: true,
 
         },
+
+         description: {
+            type: String,
+                        required: true,
+
+        },
+
+
+
+         priceStartingFrom: {
+            type: Number,
+                        required: true,
+
+        },
+
+         averageRating: {
+            type: Number,
+                        required: true,
+
+        },
+
+
+          completedJobs: {
+            type: Number,
+                        required: true,
+
+        },
+
 
        
 
