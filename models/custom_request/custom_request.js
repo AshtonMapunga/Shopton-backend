@@ -10,7 +10,7 @@ const CustomRequestSchema = new mongoose.Schema(
     },
 
     serviceType: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: String,
       ref: "ServiceType",
       required: true,
     },
