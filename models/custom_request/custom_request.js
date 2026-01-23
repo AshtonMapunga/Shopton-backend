@@ -11,7 +11,6 @@ const CustomRequestSchema = new mongoose.Schema(
 
     serviceType: {
       type: String,
-      ref: "ServiceType",
       required: true,
     },
 

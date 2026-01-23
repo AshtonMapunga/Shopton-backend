@@ -42,8 +42,6 @@ const getCustomRequestById = async (requestId) => {
 const getCustomRequestsByUser = async (userId) => {
   try {
     const customRequests = await CustomRequest.find({ userID: userId })
-      .populate("serviceType", "name image")
-      .sort({ createdAt: -1 });
     return customRequests;
   } catch (error) {
     throw new Error("Error fetching custom requests for user: " + error.message);

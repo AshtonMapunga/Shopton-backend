@@ -175,9 +175,6 @@ router.get("/filter", async (req, res) => {
     }
     
     const filteredRequests = await CustomRequest.find(query)
-      .populate("serviceType", "name image")
-      .populate("userID", "name email")
-      .sort({ createdAt: -1 });
     
     res.status(200).json(filteredRequests);
   } catch (error) {
