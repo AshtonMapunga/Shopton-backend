@@ -10,13 +10,13 @@ const orderSchema = new mongoose.Schema({
     fullName: { type: String, required: true },
     phoneNumber: { type: String, required: true },
     email: { type: String, required: true },
-    address: { type: Number, required: true },
-    city: { type: Number, required: true }
+    address: { type: String, required: true },
+    city: { type: String, required: true }
   },
 
   items: [
     {
-      productId: { type: Number, required: true },
+      productId: { type: String, required: true },
       name: { type: String, required: true },
       productImage: { type: String, required: true },
       quantity: { type: Number, required: true },
