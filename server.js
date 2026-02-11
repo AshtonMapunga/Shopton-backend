@@ -28,6 +28,8 @@ const paymentRouter = require('./router/paymentRouter.js');
 const serviceTypeRoutes = require("./router/serviceTypeRoutes.js"); 
 const customRequestRoutes = require("./router/customRequestRoutes.js");
 const wooCommerceRouter = require('./router/woocommerceRouter.js');
+const paymentsRouter = require('./router/paymentRouter.js');
+
 
 
 // ---------------------
@@ -57,6 +59,7 @@ app.use('/api/v1/payment_route', paymentRouter);
 app.use("/api/v1/service_type", serviceTypeRoutes); 
 app.use("/api/v1/custom_request", customRequestRoutes);
 app.use('/api/v1/woo', wooCommerceRouter);
+app.use('/api/v1/payment_route', paymentsRouter);
 
 
 const Port = process.env.PORT || 4071;
