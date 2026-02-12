@@ -57,6 +57,89 @@ router.post('/web', async (req, res) => {
   }
 });
 
+
+/**
+ * @route   POST /api/payments/zimswitch
+ * @desc    Initiate ZimSwitch payment
+ * @access  Public
+ */
+router.post('/zimswitch', async (req, res) => {
+  try {
+    const { orderId, amount } = req.body;
+
+    if (!orderId) {
+      return res.status(400).json({ error: "orderId is required" });
+    }
+
+    if (!amount || amount <= 0) {
+      return res.status(400).json({ error: "Valid amount is required" });
+    }
+
+    const result = await paymentService.createZimSwitchPayment(orderId, amount);
+
+    res.status(200).json({
+      success: true,
+      message: "ZimSwitch payment initiated successfully",
+      data: {
+        payment: result.payment,
+        pollUrl: result.pollUrl,
+        redirectUrl: result.redirectUrl,
+        invoice: result.invoice
+      }
+    });
+
+  } catch (error) {
+    console.error('ZimSwitch payment error:', error);
+    res.status(500).json({
+      success: false,
+      error: error.message
+    });
+  }
+});
+
+
+
+
+
+/**
+ * @route   POST /api/payments/card
+ * @desc    Initiate Visa / MasterCard payment
+ * @access  Public
+ */
+router.post('/card', async (req, res) => {
+  try {
+    const { orderId, amount } = req.body;
+
+    if (!orderId) {
+      return res.status(400).json({ error: "orderId is required" });
+    }
+
+    if (!amount || amount <= 0) {
+      return res.status(400).json({ error: "Valid amount is required" });
+    }
+
+    const result = await paymentService.createCardPayment(orderId, amount);
+
+    res.status(200).json({
+      success: true,
+      message: "Card payment initiated successfully",
+      data: {
+        payment: result.payment,
+        pollUrl: result.pollUrl,
+        redirectUrl: result.redirectUrl,
+        invoice: result.invoice
+      }
+    });
+
+  } catch (error) {
+    console.error('Card payment error:', error);
+    res.status(500).json({
+      success: false,
+      error: error.message
+    });
+  }
+});
+
 // ============= MOBILE PAYMENTS =============
 
 /**

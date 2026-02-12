@@ -68,6 +68,145 @@ const createWebPayment = async (orderId, amount) => {
   }
 };
 
+
+/**
+ * Create ZimSwitch payment
+ * @param {string} orderId
+ * @param {number} amount
+ */
+const createZimSwitchPayment = async (orderId, amount) => {
+  try {
+    const order = await Order.findById(orderId);
+    if (!order) {
+      throw new Error(`Order with ID ${orderId} not found`);
+    }
+
+    const invoice = `ZIMS-${order.orderNumberFormatted || Date.now()}`;
+
+    const payment = paynow.createPayment(
+      invoice,
+      order.deliveryDetails.email
+    );
+
+    payment.add(`Order ${order.orderNumberFormatted}`, amount);
+
+    paynow.resultUrl = process.env.PAYNOW_RESULT_URL;
+    paynow.returnUrl = process.env.PAYNOW_RETURN_URL;
+
+    // Same as card: redirect flow
+    const response = await paynow.send(payment);
+
+    if (!response.success) {
+      throw new Error("Failed to initiate ZimSwitch payment with Paynow");
+    }
+
+    const newPayment = new Payment({
+      order: orderId,
+      pollUrl: response.pollUrl,
+      price: amount,
+      currency: "USD",
+      isPaid: false,
+      showPayment: true,
+      paymentMethod: "zimswitch"
+    });
+
+    await newPayment.save();
+
+    order.paymentStatus = 'pending';
+    order.transactionReferenceID = newPayment._id;
+    await order.save();
+
+    const populatedPayment = await Payment.findById(newPayment._id)
+      .populate('order');
+
+    return {
+      success: true,
+      payment: populatedPayment,
+      pollUrl: response.pollUrl,
+      redirectUrl: response.redirectUrl,
+      invoice
+    };
+
+  } catch (error) {
+    console.error('Create ZimSwitch payment error:', error);
+    throw new Error(error.message || "Failed to process ZimSwitch payment");
+  }
+};
+
+
+
+
+/**
+ * Create Visa / MasterCard payment
+ * @param {string} orderId
+ * @param {number} amount
+ */
+const createCardPayment = async (orderId, amount) => {
+  try {
+    const order = await Order.findById(orderId);
+    if (!order) {
+      throw new Error(`Order with ID ${orderId} not found`);
+    }
+
+    const invoice = `CARD-${order.orderNumberFormatted || Date.now()}`;
+
+    const payment = paynow.createPayment(
+      invoice,
+      order.deliveryDetails.email
+    );
+
+    payment.add(`Order ${order.orderNumberFormatted}`, amount);
+
+    // Ensure URLs are set
+    paynow.resultUrl = process.env.PAYNOW_RESULT_URL;
+    paynow.returnUrl = process.env.PAYNOW_RETURN_URL;
+
+    // IMPORTANT: Use normal send() for card payments
+    const response = await paynow.send(payment);
+
+    if (!response.success) {
+      throw new Error("Failed to initiate card payment with Paynow");
+    }
+
+    const newPayment = new Payment({
+      order: orderId,
+      pollUrl: response.pollUrl,
+      price: amount,
+      currency: "USD",
+      isPaid: false,
+      showPayment: true,
+      paymentMethod: "card"
+    });
+
+    await newPayment.save();
+
+    order.paymentStatus = 'pending';
+    order.transactionReferenceID = newPayment._id;
+    await order.save();
+
+    const populatedPayment = await Payment.findById(newPayment._id)
+      .populate('order');
+
+    return {
+      success: true,
+      payment: populatedPayment,
+      pollUrl: response.pollUrl,
+      redirectUrl: response.redirectUrl,
+      invoice
+    };
+
+  } catch (error) {
+    console.error('Create card payment error:', error);
+    throw new Error(error.message || "Failed to process card payment");
+  }
+};
+
+
+
+
+
+
+
 /**
  * Create a mobile payment for an order
  * @param {string} orderId - The ID of the order to pay for
@@ -389,5 +528,7 @@ module.exports = {
   getPaymentsByEmail,
   getPaymentsByPhoneNumber,
   updatePayment,
-  deletePayment
+  deletePayment,
+  createCardPayment,
+  createZimSwitchPayment
 };
