@@ -1,4 +1,5 @@
 const Order = require("../models/orders/orderSchema");
+const { sendEmail } = require("../services/email.service");
 
 
 const generateRandomOrderNumber = () => {
@@ -8,26 +9,48 @@ const generateRandomOrderNumber = () => {
 
 const createOrder = async (orderData) => {
   try {
-    if ('orderNumber' in orderData || 'orderNumberFormatted' in orderData) {
-      throw new Error("Order creation error");
-    }
-
+    // Generate formatted order number
     const formattedOrderNumber = generateRandomOrderNumber();
 
+    // Create new order
     const newOrder = new Order({
       ...orderData,
-      orderNumber: Date.now(), 
+      orderNumber: Date.now(), // unique number for internal reference
       orderNumberFormatted: formattedOrderNumber
     });
 
+    // Save order in DB
     await newOrder.save();
 
+    // ✅ Send order confirmation email
+    const recipientEmail = orderData.deliveryDetails?.email;
+
+    if (recipientEmail) {
+      try {
+        await sendEmail({
+          to: recipientEmail,
+          subject: "Order Confirmation - Shoptoo",
+          templateName: "orderConfirmation",
+          data: {
+            name: orderData.deliveryDetails.fullName,
+            orderId: formattedOrderNumber,
+            total: orderData.totalAmount
+          }
+        });
+      } catch (emailError) {
+        console.error("Order created but email failed:", emailError.message);
+      }
+    } else {
+      console.warn("Order created but delivery email not found");
+    }
+
+    // Return order object
     return newOrder.toJSON();
+
   } catch (error) {
     throw new Error("Error creating order: " + error.message);
   }
 };
-
 // Get all orders
 const getAllOrders = async () => {
   try {

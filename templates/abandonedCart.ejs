@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<body style="font-family: Arial; background:#f5f5f5; padding:20px;">
+  <div style="max-width:600px; background:#fff; margin:auto; padding:20px; border-radius:8px;">
+
+    <div style="text-align:center;">
+      <img src="<%= logoUrl %>" width="150" />
+    </div>
+
+    <h2>Hi <%= name %>,</h2>
+
+    <p>You left some items in your cart 🛒</p>
+
+    <p><strong>Cart Total:</strong> $<%= total %></p>
+
+    <a href="<%= cartUrl %>" 
+       style="display:inline-block; padding:10px 20px; background:#ff6600; color:#fff; text-decoration:none; border-radius:4px;">
+       Complete Your Purchase
+    </a>
+
+    <p>Don’t miss out!</p>
+
+  </div>
+</body>
+</html>
