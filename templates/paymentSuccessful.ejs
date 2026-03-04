@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<body style="font-family: Arial; background:#f5f5f5; padding:20px;">
+  <div style="max-width:600px; background:#fff; margin:auto; padding:20px; border-radius:8px;">
+    
+    <div style="text-align:center;">
+      <img src="<%= logoUrl %>" width="150" />
+    </div>
+
+    <h2>Hello <%= name %>,</h2>
+
+    <p>Your payment has been successfully received 🎉</p>
+
+    <p><strong>Order ID:</strong> <%= orderId %></p>
+    <p><strong>Amount Paid:</strong> $<%= total %></p>
+    <p><strong>Payment Method:</strong> <%= paymentMethod %></p>
+
+    <p>We are now preparing your order.</p>
+
+    <p>Thank you for shopping with Shoptoo!</p>
+
+  </div>
+</body>
+</html>

@@ -29,6 +29,8 @@ const serviceTypeRoutes = require("./router/serviceTypeRoutes.js");
 const customRequestRoutes = require("./router/customRequestRoutes.js");
 const wooCommerceRouter = require('./router/woocommerceRouter.js');
 const paymentsRouter = require('./router/paymentRouter.js');
+const emailRouter = require('./router/email.routes.js');
+
 
 
 
@@ -48,6 +50,9 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(express.json());
 
+app.use("/images", express.static("public/images"));
+
+
 // ---------------------
 // Routes
 // ---------------------
@@ -60,6 +65,7 @@ app.use("/api/v1/service_type", serviceTypeRoutes);
 app.use("/api/v1/custom_request", customRequestRoutes);
 app.use('/api/v1/woo', wooCommerceRouter);
 app.use('/api/v1/payment_route', paymentsRouter);
+app.use("/api/v1/email", emailRouter);
 
 
 const Port = process.env.PORT || 4071;
