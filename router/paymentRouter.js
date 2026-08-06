@@ -3,6 +3,356 @@ const router = express.Router();
 const { Paynow } = require("paynow");
 const paymentService = require('../services/paymentService');
 
+/**
+ * @swagger
+ * tags:
+ *   name: Payments
+ *   description: Paynow payment gateway — web, mobile money, card and ZimSwitch
+ */
+
+/**
+ * @swagger
+ * /api/v1/payment_route/web:
+ *   post:
+ *     summary: Initiate a web/redirect payment
+ *     tags: [Payments]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required: [orderId, amount]
+ *             properties:
+ *               orderId: { type: string, example: "64f1a2b3c4d5e6f7a8b9c0d1" }
+ *               amount: { type: number, example: 99.99 }
+ *     responses:
+ *       200:
+ *         description: Payment initiated — redirect user to redirectUrl
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success: { type: boolean }
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     redirectUrl: { type: string }
+ *                     pollUrl: { type: string }
+ *                     invoice: { type: string }
+ *       400:
+ *         description: Missing orderId or amount
+ *       500:
+ *         description: Paynow gateway error
+ */
+
+/**
+ * @swagger
+ * /api/v1/payment_route/card:
+ *   post:
+ *     summary: Initiate a Visa/MasterCard payment
+ *     tags: [Payments]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required: [orderId, amount]
+ *             properties:
+ *               orderId: { type: string }
+ *               amount: { type: number }
+ *     responses:
+ *       200:
+ *         description: Card payment initiated
+ *       400:
+ *         description: Missing fields
+ */
+
+/**
+ * @swagger
+ * /api/v1/payment_route/zimswitch:
+ *   post:
+ *     summary: Initiate a ZimSwitch payment
+ *     tags: [Payments]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required: [orderId, amount]
+ *             properties:
+ *               orderId: { type: string }
+ *               amount: { type: number }
+ *     responses:
+ *       200:
+ *         description: ZimSwitch payment initiated
+ */
+
+/**
+ * @swagger
+ * /api/v1/payment_route/mobile/ecocash:
+ *   post:
+ *     summary: Initiate an EcoCash mobile payment
+ *     tags: [Payments]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required: [orderId, amount, phoneNumber]
+ *             properties:
+ *               orderId: { type: string }
+ *               amount: { type: number }
+ *               phoneNumber: { type: string, example: "0771234567" }
+ *     responses:
+ *       200:
+ *         description: EcoCash payment pushed to customer's phone
+ */
+
+/**
+ * @swagger
+ * /api/v1/payment_route/mobile/onemoney:
+ *   post:
+ *     summary: Initiate a OneMoney mobile payment
+ *     tags: [Payments]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required: [orderId, amount, phoneNumber]
+ *             properties:
+ *               orderId: { type: string }
+ *               amount: { type: number }
+ *               phoneNumber: { type: string }
+ *     responses:
+ *       200:
+ *         description: OneMoney payment initiated
+ */
+
+/**
+ * @swagger
+ * /api/v1/payment_route/mobile/telecash:
+ *   post:
+ *     summary: Initiate a Telecash mobile payment
+ *     tags: [Payments]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required: [orderId, amount, phoneNumber]
+ *             properties:
+ *               orderId: { type: string }
+ *               amount: { type: number }
+ *               phoneNumber: { type: string }
+ *     responses:
+ *       200:
+ *         description: Telecash payment initiated
+ */
+
+/**
+ * @swagger
+ * /api/v1/payment_route/mobile/inbucks:
+ *   post:
+ *     summary: Initiate an InBucks mobile payment
+ *     tags: [Payments]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required: [orderId, amount, phoneNumber]
+ *             properties:
+ *               orderId: { type: string }
+ *               amount: { type: number }
+ *               phoneNumber: { type: string }
+ *     responses:
+ *       200:
+ *         description: InBucks payment initiated
+ */
+
+/**
+ * @swagger
+ * /api/v1/payment_route/check-status:
+ *   post:
+ *     summary: Poll Paynow for payment status and update the order
+ *     tags: [Payments]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required: [pollUrl]
+ *             properties:
+ *               pollUrl: { type: string, example: "https://www.paynow.co.zw/Interface/CheckPayment/?guid=xxx" }
+ *     responses:
+ *       200:
+ *         description: Payment status (paid / cancelled / pending / sent)
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success: { type: boolean }
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     status: { type: string, example: "paid" }
+ *                     payment: { $ref: '#/components/schemas/Payment' }
+ */
+
+/**
+ * @swagger
+ * /api/v1/payment_route/:
+ *   get:
+ *     summary: Get all payments with populated order details (admin)
+ *     tags: [Payments]
+ *     responses:
+ *       200:
+ *         description: List of all payments
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success: { type: boolean }
+ *                 count: { type: number }
+ *                 data:
+ *                   type: array
+ *                   items: { $ref: '#/components/schemas/Payment' }
+ */
+
+/**
+ * @swagger
+ * /api/v1/payment_route/{paymentId}:
+ *   get:
+ *     summary: Get a single payment by ID
+ *     tags: [Payments]
+ *     parameters:
+ *       - in: path
+ *         name: paymentId
+ *         required: true
+ *         schema: { type: string }
+ *     responses:
+ *       200:
+ *         description: Payment with order details
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success: { type: boolean }
+ *                 data: { $ref: '#/components/schemas/Payment' }
+ *       404:
+ *         description: Payment not found
+ *   put:
+ *     summary: Update payment fields and sync with order
+ *     tags: [Payments]
+ *     parameters:
+ *       - in: path
+ *         name: paymentId
+ *         required: true
+ *         schema: { type: string }
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               isPaid: { type: boolean }
+ *               showPayment: { type: boolean }
+ *     responses:
+ *       200:
+ *         description: Payment updated
+ *   delete:
+ *     summary: Delete a payment record
+ *     tags: [Payments]
+ *     parameters:
+ *       - in: path
+ *         name: paymentId
+ *         required: true
+ *         schema: { type: string }
+ *     responses:
+ *       200:
+ *         description: Payment deleted
+ *       404:
+ *         description: Payment not found
+ */
+
+/**
+ * @swagger
+ * /api/v1/payment_route/order/{orderId}:
+ *   get:
+ *     summary: Get all payments for a specific order
+ *     tags: [Payments]
+ *     parameters:
+ *       - in: path
+ *         name: orderId
+ *         required: true
+ *         schema: { type: string }
+ *     responses:
+ *       200:
+ *         description: Payments for the order
+ */
+
+/**
+ * @swagger
+ * /api/v1/payment_route/user/{userId}:
+ *   get:
+ *     summary: Get all payments for a specific user
+ *     tags: [Payments]
+ *     parameters:
+ *       - in: path
+ *         name: userId
+ *         required: true
+ *         schema: { type: string }
+ *     responses:
+ *       200:
+ *         description: Payments for the user
+ */
+
+/**
+ * @swagger
+ * /api/v1/payment_route/email/{email}:
+ *   get:
+ *     summary: Get payments by customer email
+ *     tags: [Payments]
+ *     parameters:
+ *       - in: path
+ *         name: email
+ *         required: true
+ *         schema: { type: string }
+ *     responses:
+ *       200:
+ *         description: Payments matching the email
+ */
+
+/**
+ * @swagger
+ * /api/v1/payment_route/phone/{phoneNumber}:
+ *   get:
+ *     summary: Get payments by customer phone number
+ *     tags: [Payments]
+ *     parameters:
+ *       - in: path
+ *         name: phoneNumber
+ *         required: true
+ *         schema: { type: string }
+ *     responses:
+ *       200:
+ *         description: Payments matching the phone number
+ */
+
 // Initialize Paynow
 const initializePaynow = () => {
   const paynow = new Paynow(

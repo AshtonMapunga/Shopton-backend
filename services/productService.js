@@ -1,81 +1,122 @@
-const Product = require("../models/product/products_schema"); // Adjust the path according to your file structure
-const CACHE_KEY = "products_cache";
+const Product = require("../models/product/products_schema");
 const redis = require("../config/redisClient");
 
+const CACHE_KEY = "products_cache";
 
-// Create a new class
-const creaProduct = async (productData) => {
-  try {
-    const newProduct = new Product(productData)
-    await newProduct.save();
-      await redis.del("products_cache");
-    return newProduct;
-  } catch (error) {
-    throw new Error("Error creating product: " + error.message);
-  }
+const safeRedisGet = async (key) => {
+  try { return await redis.get(key); } catch { return null; }
 };
 
-// Get all classes
-const getAllProduct = async () => {
-  try {
-    // Check cache first
-    const cachedData = await redis.get(CACHE_KEY); // ✅ Already parsed
-
-    if (cachedData) {
-      console.log("🟢 Retrieved from Redis cache");
-      return cachedData; // ❌ DO NOT parse again
-    }
-
-    // If no cache, fetch from DB
-    const products = await Product.find();
-
-    // Store in Redis (with 1-hour expiry)
-    await redis.set(CACHE_KEY, products, { ex: 3600 }); // ✅ No need to stringify
-
-    console.log("🔵 Retrieved from MongoDB and cached");
-    return products;
-  } catch (error) {
-    throw new Error("Error fetching products: " + error.message);
-  }
+const safeRedisSet = async (key, value, opts) => {
+  try { await redis.set(key, value, opts); } catch { /* non-fatal */ }
 };
 
-
-// Update a class by ID
-const updateProduct = async (productID, updateData) => {
+const safeRedisDel = async (pattern) => {
   try {
-    const updatedProduct = await Product.findByIdAndUpdate(productID, updateData, { new: true });
-
-    if (!updatedProduct) {
-      throw new Error("Product not found");
-    }
-      await redis.del("products_cache");
-    return updatedProduct;
-  } catch (error) {
-    throw new Error("Error updating Product: " + error.message);
-  }
+    const keys = await redis.keys(pattern);
+    if (keys.length > 0) await Promise.all(keys.map((k) => redis.del(k)));
+  } catch { /* non-fatal */ }
 };
 
-// Delete a class by ID
-const deleteProduct = async (productID) => {
-  try {
-    const deletedProduct = await Product.findByIdAndDelete(productID);
-    if (!deletedProduct) {
-      throw new Error("Banner not found");
-    }
-      await redis.del("products_cache");
-    return deletedProduct;
-  } catch (error) {
-    throw new Error("Error deleting Product: " + error.message);
-  }
+const createProduct = async (productData) => {
+  const product = new Product(productData);
+  await product.save();
+  await safeRedisDel("products_*");
+  return product;
 };
 
+const getAllProducts = async ({ page = 1, limit = 20 } = {}) => {
+  const cacheKey = `${CACHE_KEY}_p${page}_l${limit}`;
+  const cached = await safeRedisGet(cacheKey);
+  if (cached) return cached;
 
+  const skip = (page - 1) * limit;
+  const [products, total] = await Promise.all([
+    Product.find({ isActive: true }).sort({ createdAt: -1 }).skip(skip).limit(Number(limit)),
+    Product.countDocuments({ isActive: true }),
+  ]);
 
+  const result = { products, total, page: Number(page), pages: Math.ceil(total / limit) };
+  await safeRedisSet(cacheKey, result, { ex: 3600 });
+  return result;
+};
+
+const getProductById = async (productId) => {
+  const product = await Product.findById(productId);
+  if (!product) throw new Error("Product not found");
+  return product;
+};
+
+const getProductsByCategory = async (categoryID, { page = 1, limit = 20 } = {}) => {
+  const skip = (page - 1) * limit;
+  const [products, total] = await Promise.all([
+    Product.find({ categoryID, isActive: true }).sort({ createdAt: -1 }).skip(skip).limit(Number(limit)),
+    Product.countDocuments({ categoryID, isActive: true }),
+  ]);
+  return { products, total, page: Number(page), pages: Math.ceil(total / limit) };
+};
+
+const getProductsByBrand = async (brand, { page = 1, limit = 20 } = {}) => {
+  const skip = (page - 1) * limit;
+  const filter = { brand: new RegExp(brand, "i"), isActive: true };
+  const [products, total] = await Promise.all([
+    Product.find(filter).sort({ createdAt: -1 }).skip(skip).limit(Number(limit)),
+    Product.countDocuments(filter),
+  ]);
+  return { products, total, page: Number(page), pages: Math.ceil(total / limit) };
+};
+
+const searchProducts = async (query, { page = 1, limit = 20 } = {}) => {
+  const skip = (page - 1) * limit;
+  const filter = {
+    isActive: true,
+    $or: [
+      { name: new RegExp(query, "i") },
+      { description: new RegExp(query, "i") },
+      { brand: new RegExp(query, "i") },
+      { tags: new RegExp(query, "i") },
+      { category: new RegExp(query, "i") },
+    ],
+  };
+  const [products, total] = await Promise.all([
+    Product.find(filter).sort({ createdAt: -1 }).skip(skip).limit(Number(limit)),
+    Product.countDocuments(filter),
+  ]);
+  return { products, total, page: Number(page), pages: Math.ceil(total / limit) };
+};
+
+const getFeaturedProducts = async () => {
+  const cacheKey = "products_featured";
+  const cached = await safeRedisGet(cacheKey);
+  if (cached) return cached;
+
+  const products = await Product.find({ isFeatured: true, isActive: true }).sort({ createdAt: -1 }).limit(20);
+  await safeRedisSet(cacheKey, products, { ex: 3600 });
+  return products;
+};
+
+const updateProduct = async (productId, updateData) => {
+  const product = await Product.findByIdAndUpdate(productId, updateData, { new: true });
+  if (!product) throw new Error("Product not found");
+  await safeRedisDel("products_*");
+  return product;
+};
+
+const deleteProduct = async (productId) => {
+  const product = await Product.findByIdAndDelete(productId);
+  if (!product) throw new Error("Product not found");
+  await safeRedisDel("products_*");
+  return product;
+};
 
 module.exports = {
-  creaProduct,
-  getAllProduct,
+  createProduct,
+  getAllProducts,
+  getProductById,
+  getProductsByCategory,
+  getProductsByBrand,
+  searchProducts,
+  getFeaturedProducts,
   updateProduct,
   deleteProduct,
- 
 };
