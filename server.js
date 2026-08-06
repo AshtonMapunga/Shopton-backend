@@ -5,19 +5,12 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const swaggerUi = require('swagger-ui-express');
 const swaggerDocument = require('./swagger');
-const { Redis } = require('@upstash/redis');
+const redis = require('./config/redisClient');
 
 // ---------------------
 // Redis Setup (Upstash)
 // ---------------------
-const redis = new Redis({
-    url: process.env.UPSTASH_REDIS_REST_URL,
-    token: process.env.UPSTASH_REDIS_REST_TOKEN,
-});
-
-redis.ping()
-    .then(() => console.log('Connected to Upstash Redis'))
-    .catch(err => console.error('Redis connection error:', err));
+// Redis is optional for startup; the shared client falls back gracefully if unavailable.
 
 // ---------------------
 // Import Routers
@@ -53,7 +46,6 @@ app.use(bodyParser.json());
 app.use(express.json());
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
-app.get('/swagger.json', (req, res) => res.json(swaggerDocument));
 app.use("/images", express.static("public/images"));
 
 
@@ -72,5 +64,21 @@ app.use('/api/v1/payment_route', paymentsRouter);
 app.use("/api/v1/email", emailRouter);
 
 
-const Port = process.env.PORT || 4071;
-app.listen(Port, () => console.log("Server running at port:", Port));
+const startServer = (port) => {
+  const server = app.listen(port, () => {
+    console.log("Server running at port:", port);
+    console.log(`Swagger docs: http://localhost:${port}/api-docs`);
+  });
+
+  server.on('error', (error) => {
+    if (error.code === 'EADDRINUSE') {
+      console.warn(`Port ${port} is busy. Trying ${port + 1}...`);
+      startServer(port + 1);
+    } else {
+      throw error;
+    }
+  });
+};
+
+const Port = Number(process.env.PORT || 4071);
+startServer(Port);

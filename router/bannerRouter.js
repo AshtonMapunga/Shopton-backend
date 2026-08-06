@@ -1,15 +1,7 @@
 const express = require("express");
 const router = express.Router();
-const { Redis } = require("@upstash/redis");
+const redis = require("../config/redisClient");
 const banner = require("../services/bannerService");
-
-// ---------------------
-// Redis Setup
-// ---------------------
-const redis = new Redis({
-  url: process.env.UPSTASH_REDIS_REST_URL,
-  token: process.env.UPSTASH_REDIS_REST_TOKEN,
-});
 
 // ---------------------
 // Helper: Clear banner cache
