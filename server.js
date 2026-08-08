@@ -32,7 +32,11 @@ const emailRouter = require('./router/email.routes.js');
 // ---------------------
 // MongoDB Connection
 // ---------------------
-const mongoUrl = "mongodb+srv://sebatech2024:xcGRZSYqgiLbwbO0@escholar.f51th.mongodb.net/Shopton";
+const mongoUrl = process.env.MONGODB_URI;
+if (!mongoUrl) {
+  throw new Error('MONGODB_URI is required');
+}
+
 mongoose.connect(mongoUrl)
     .then(() => console.log('MongoDB connected successfully'))
     .catch(err => console.error('Error connecting to MongoDB:', err));

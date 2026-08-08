@@ -7,8 +7,8 @@ const swaggerDefinition = {
   },
   servers: [
     {
-      url: 'http://localhost:4071',
-      description: 'Local development server'
+      url: process.env.BASE_URL || 'http://localhost:4071',
+      description: process.env.BASE_URL ? 'Deployed server' : 'Local development server'
     }
   ],
   tags: [
