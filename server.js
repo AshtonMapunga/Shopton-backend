@@ -32,7 +32,7 @@ const emailRouter = require('./router/email.routes.js');
 // ---------------------
 // MongoDB Connection
 // ---------------------
-const mongoUrl = process.env.MONGODB_URI;
+const mongoUrl = process.env.MONGODB_URI || process.env.MongoDB_URI;
 if (!mongoUrl) {
   throw new Error('MONGODB_URI is required');
 }
@@ -71,7 +71,8 @@ app.use("/api/v1/email", emailRouter);
 const startServer = (port) => {
   const server = app.listen(port, () => {
     console.log("Server running at port:", port);
-    console.log(`Swagger docs: http://localhost:${port}/api-docs`);
+    const publicBaseUrl = process.env.BASE_URL || `http://localhost:${port}`;
+    console.log(`Swagger docs: ${publicBaseUrl}/api-docs`);
   });
 
   server.on('error', (error) => {
