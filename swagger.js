@@ -1,3 +1,7 @@
+const configuredBaseUrl = (process.env.BASE_URL || '')
+  .replace(/^BASE_URL=/, '')
+  .replace(/\/$/, '');
+
 const swaggerDefinition = {
   openapi: '3.0.0',
   info: {
@@ -7,8 +11,8 @@ const swaggerDefinition = {
   },
   servers: [
     {
-      url: process.env.BASE_URL || 'http://localhost:4071',
-      description: process.env.BASE_URL ? 'Deployed server' : 'Local development server'
+      url: configuredBaseUrl || 'http://localhost:4071',
+      description: configuredBaseUrl ? 'Deployed server' : 'Local development server'
     }
   ],
   tags: [

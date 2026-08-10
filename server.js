@@ -26,6 +26,9 @@ const wooCommerceRouter = require('./router/woocommerceRouter.js');
 const paymentsRouter = require('./router/paymentRouter.js');
 const emailRouter = require('./router/email.routes.js');
 
+const configuredBaseUrl = (process.env.BASE_URL || '')
+  .replace(/^BASE_URL=/, '')
+  .replace(/\/$/, '');
 
 
 
@@ -70,8 +73,8 @@ app.use("/api/v1/email", emailRouter);
 
 const startServer = (port) => {
   const server = app.listen(port, () => {
-    console.log("Server running at port:", port);
-    const publicBaseUrl = process.env.BASE_URL || `http://localhost:${port}`;
+    const publicBaseUrl = configuredBaseUrl || `http://localhost:${port}`;
+    console.log(`Shopton deployed successfully on port ${port}`);
     console.log(`Swagger docs: ${publicBaseUrl}/api-docs`);
   });
 
