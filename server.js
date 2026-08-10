@@ -55,6 +55,13 @@ app.use(express.json());
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use("/images", express.static("public/images"));
 
+app.get('/', (req, res) => {
+  res.json({
+    message: 'Shopton backend is running successfully',
+    documentation: '/api-docs'
+  });
+});
+
 
 // ---------------------
 // Routes
