@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const customRequestService = require("../services/customRequestService"); 
+const CustomRequest = require("../models/custom_request/custom_request");
 
 // Create a new custom request
 router.post("/create", async (req, res) => {

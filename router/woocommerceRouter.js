@@ -42,24 +42,6 @@ router.get('/products', async (req, res) => {
   }
 });
 
-// Get product by ID
-router.get('/products/:id', async (req, res) => {
-  const { id } = req.params;
-  const cacheKey = `product_${id}`;
-
-  try {
-    const cached = await redis.get(cacheKey);
-    if (cached) return res.json(cached);
-
-    const response = await wcAxios.get(`/products/${id}`);
-    await redis.set(cacheKey, response.data, { ex: 300 });
-    res.json(response.data);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Failed to fetch product' });
-  }
-});
-
 // Search products
 router.get('/products/search', async (req, res) => {
   const { query, page = 1, perPage = 10 } = req.query;
@@ -78,6 +60,24 @@ router.get('/products/search', async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Failed to search products' });
+  }
+});
+
+// Get product by ID
+router.get('/products/:id', async (req, res) => {
+  const { id } = req.params;
+  const cacheKey = `product_${id}`;
+
+  try {
+    const cached = await redis.get(cacheKey);
+    if (cached) return res.json(cached);
+
+    const response = await wcAxios.get(`/products/${id}`);
+    await redis.set(cacheKey, response.data, { ex: 300 });
+    res.json(response.data);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Failed to fetch product' });
   }
 });
 
