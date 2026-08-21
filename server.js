@@ -40,10 +40,6 @@ if (!mongoUrl) {
   throw new Error('MONGODB_URI is required');
 }
 
-mongoose.connect(mongoUrl)
-    .then(() => console.log('MongoDB connected successfully'))
-    .catch(err => console.error('Error connecting to MongoDB:', err));
-
 // ---------------------
 // Express Middlewares
 // ---------------------
@@ -96,4 +92,13 @@ const startServer = (port) => {
 };
 
 const Port = Number(process.env.PORT || 4071);
-startServer(Port);
+
+mongoose.connect(mongoUrl)
+  .then(() => {
+    console.log('MongoDB connected successfully');
+    startServer(Port);
+  })
+  .catch((error) => {
+    console.error('Error connecting to MongoDB:', error.message);
+    process.exitCode = 1;
+  });

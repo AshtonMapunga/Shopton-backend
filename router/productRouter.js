@@ -5,7 +5,7 @@ const product = require("../services/productService");
 // Create a new class
 router.post("/create", async (req, res) => {
   try {
-    const newProduct = await product.creaProduct(req.body);
+    const newProduct = await product.createProduct(req.body);
     res.status(201).json(newProduct);
   } catch (error) {
     res.status(400).json({ message: error.message });

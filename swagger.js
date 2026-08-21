@@ -26,12 +26,182 @@ const swaggerDefinition = {
     { name: 'Payments', description: 'Payment gateway endpoints' },
     { name: 'WooCommerce', description: 'WooCommerce product and category endpoints' }
   ],
+  components: {
+    schemas: {
+      BannerInput: {
+        type: 'object',
+        properties: {
+          title: { type: 'string', example: 'Summer Sale' },
+          description: { type: 'string', example: 'Seasonal product offers' },
+          imageurl: { type: 'string', format: 'uri', example: 'https://example.com/banner.jpg' },
+          categoryName: { type: 'string', example: 'Featured' },
+          productCategoryID: { type: 'string', example: '12' }
+        },
+        required: ['title', 'description', 'imageurl', 'categoryName', 'productCategoryID']
+      },
+      BrandInput: {
+        type: 'object',
+        properties: {
+          title: { type: 'string', example: 'Acme' },
+          numberofitems: { type: 'string', example: '24' },
+          imageurl: { type: 'string', format: 'uri', example: 'https://example.com/brand.jpg' },
+          productCategoryID: { type: 'number', example: 12 }
+        },
+        required: ['title', 'numberofitems', 'imageurl', 'productCategoryID']
+      },
+      OrderInput: {
+        type: 'object',
+        properties: {
+          userId: { type: 'string', example: 'customer-123' },
+          deliveryDetails: {
+            type: 'object',
+            properties: {
+              fullName: { type: 'string', example: 'Jane Doe' },
+              phoneNumber: { type: 'string', example: '+263771234567' },
+              email: { type: 'string', format: 'email', example: 'jane@example.com' },
+              address: { type: 'string', example: '12 Main Street' },
+              city: { type: 'string', example: 'Harare' }
+            },
+            required: ['fullName', 'phoneNumber', 'email', 'address', 'city']
+          },
+          items: {
+            type: 'array',
+            items: {
+              type: 'object',
+              properties: {
+                productId: { type: 'string', example: '665f1a2b3c4d5e6f78901234' },
+                name: { type: 'string', example: 'Sample Product' },
+                productImage: { type: 'string', format: 'uri', example: 'https://example.com/product.jpg' },
+                quantity: { type: 'number', example: 2 },
+                price: { type: 'number', example: 25.5 }
+              },
+              required: ['productId', 'name', 'productImage', 'quantity', 'price']
+            }
+          },
+          totalAmount: { type: 'number', example: 51 },
+          paymentStatus: { type: 'string', enum: ['pending', 'paid', 'cancelled'] },
+          deliveryStatus: { type: 'string', enum: ['completed', 'off', 'confirmed', 'processing', 'delivered'] },
+          paymentModel: { type: 'string', enum: ['bnpl', 'cod', 'online'] },
+          depositAmount: { type: 'number', example: 25.5 },
+          remainAmount: { type: 'number', example: 25.5 },
+          paymentMethod: { type: 'string', example: 'card' },
+          transactionReferenceID: { type: 'string', example: 'TXN-12345' }
+        },
+        required: ['deliveryDetails', 'items', 'totalAmount', 'depositAmount', 'remainAmount', 'paymentMethod']
+      },
+      ServiceTypeInput: {
+        type: 'object',
+        properties: {
+          name: { type: 'string', example: 'Plumbing' },
+          imageurl: { type: 'string', format: 'uri', example: 'https://example.com/service.jpg' },
+          description: { type: 'string', example: 'Professional plumbing services' },
+          priceStartingFrom: { type: 'number', example: 50 },
+          averageRating: { type: 'number', example: 4.5 },
+          completedJobs: { type: 'number', example: 120 },
+          serviceTypeCategory: { type: 'number', example: 3 },
+          isActive: { type: 'boolean', example: true }
+        },
+        required: ['name', 'imageurl', 'description', 'priceStartingFrom', 'averageRating', 'completedJobs', 'serviceTypeCategory']
+      },
+      CustomRequestInput: {
+        type: 'object',
+        properties: {
+          userID: { type: 'string', example: 'customer-123' },
+          serviceType: { type: 'string', example: 'plumbing' },
+          description: { type: 'string', example: 'Fix a leaking kitchen tap' },
+          imageUrls: { type: 'array', items: { type: 'string', format: 'uri' } },
+          budget: {
+            type: 'object',
+            properties: {
+              min: { type: 'number', example: 50 },
+              max: { type: 'number', example: 150 },
+              currency: { type: 'string', example: 'USD' }
+            }
+          },
+          location: {
+            type: 'object',
+            properties: {
+              address: { type: 'string', example: '12 Main Street' },
+              city: { type: 'string', example: 'Harare' },
+              coordinates: {
+                type: 'object',
+                properties: {
+                  latitude: { type: 'number', example: -17.8252 },
+                  longitude: { type: 'number', example: 31.0335 }
+                }
+              }
+            }
+          },
+          urgency: { type: 'string', enum: ['ASAP', 'THIS_WEEK', 'FLEXIBLE'] },
+          status: { type: 'string', enum: ['PENDING', 'EXPERTS_REQUESTED', 'QUOTED', 'IN_PROGRESS', 'COMPLETED', 'CANCELLED'] }
+        },
+        required: ['userID', 'serviceType', 'description']
+      },
+      PaymentInput: {
+        type: 'object',
+        properties: {
+          pollUrl: { type: 'string', format: 'uri', example: 'https://payments.example.com/poll/123' },
+          isPaid: { type: 'boolean', example: false },
+          showPayment: { type: 'boolean', example: true },
+          currency: { type: 'string', example: 'USD' },
+          price: { type: 'number', example: 51 },
+          order: { type: 'string', example: '665f1a2b3c4d5e6f78901234' },
+          attempts: { type: 'number', example: 1 },
+          mobilePaymentDetails: {
+            type: 'object',
+            properties: {
+              method: { type: 'string', example: 'ecocash' },
+              phoneNumber: { type: 'string', example: '+263771234567' },
+              status: { type: 'string', example: 'pending' }
+            }
+          }
+        }
+      },
+      PaymentSuccessfulEmail: {
+        type: 'object',
+        properties: {
+          name: { type: 'string', example: 'Jane Doe' },
+          email: { type: 'string', format: 'email', example: 'jane@example.com' },
+          orderId: { type: 'string', example: 'OR-ABC1234' },
+          total: { type: 'number', example: 51 },
+          paymentMethod: { type: 'string', example: 'card' }
+        },
+        required: ['name', 'email', 'orderId', 'total', 'paymentMethod']
+      },
+      OrderDeliveredEmail: {
+        type: 'object',
+        properties: {
+          name: { type: 'string', example: 'Jane Doe' },
+          email: { type: 'string', format: 'email', example: 'jane@example.com' },
+          orderId: { type: 'string', example: 'OR-ABC1234' }
+        },
+        required: ['name', 'email', 'orderId']
+      },
+      WelcomeEmail: {
+        type: 'object',
+        properties: {
+          name: { type: 'string', example: 'Jane Doe' },
+          email: { type: 'string', format: 'email', example: 'jane@example.com' }
+        },
+        required: ['name', 'email']
+      },
+      AbandonedCartEmail: {
+        type: 'object',
+        properties: {
+          name: { type: 'string', example: 'Jane Doe' },
+          email: { type: 'string', format: 'email', example: 'jane@example.com' },
+          total: { type: 'number', example: 51 }
+        },
+        required: ['name', 'email', 'total']
+      }
+    }
+  },
   paths: {
     '/api/v1/banner_route/create': {
       post: {
         tags: ['Banners'],
         summary: 'Create a new banner',
-        requestBody: { required: true, content: { 'application/json': { schema: { type: 'object', additionalProperties: true } } } },
+        requestBody: { required: true, content: { 'application/json': { schema: { $ref: '#/components/schemas/BannerInput' } } } },
         responses: { '201': { description: 'Banner created successfully' }, '400': { description: 'Invalid request' } }
       }
     },
@@ -47,7 +217,7 @@ const swaggerDefinition = {
         tags: ['Banners'],
         summary: 'Update a banner by ID',
         parameters: [{ name: 'bannerId', in: 'path', required: true, schema: { type: 'string' } }],
-        requestBody: { required: true, content: { 'application/json': { schema: { type: 'object', additionalProperties: true } } } },
+        requestBody: { required: true, content: { 'application/json': { schema: { $ref: '#/components/schemas/BannerInput' } } } },
         responses: { '200': { description: 'Banner updated' }, '400': { description: 'Invalid request' } }
       }
     },
@@ -63,7 +233,7 @@ const swaggerDefinition = {
       post: {
         tags: ['Brands'],
         summary: 'Create a new brand',
-        requestBody: { required: true, content: { 'application/json': { schema: { type: 'object', additionalProperties: true } } } },
+        requestBody: { required: true, content: { 'application/json': { schema: { $ref: '#/components/schemas/BrandInput' } } } },
         responses: { '201': { description: 'Brand created successfully' }, '400': { description: 'Invalid request' } }
       }
     },
@@ -79,7 +249,7 @@ const swaggerDefinition = {
         tags: ['Brands'],
         summary: 'Update a brand by ID',
         parameters: [{ name: 'brandID', in: 'path', required: true, schema: { type: 'string' } }],
-        requestBody: { required: true, content: { 'application/json': { schema: { type: 'object', additionalProperties: true } } } },
+        requestBody: { required: true, content: { 'application/json': { schema: { $ref: '#/components/schemas/BrandInput' } } } },
         responses: { '200': { description: 'Brand updated' }, '400': { description: 'Invalid request' } }
       }
     },
@@ -95,7 +265,23 @@ const swaggerDefinition = {
       post: {
         tags: ['Products'],
         summary: 'Create a new product',
-        requestBody: { required: true, content: { 'application/json': { schema: { type: 'object', additionalProperties: true } } } },
+        requestBody: {
+          required: true,
+          content: {
+            'application/json': {
+              schema: {
+                type: 'object',
+                properties: {
+                  name: { type: 'string', example: 'Sample Product' },
+                  description: { type: 'string', example: 'Product description' },
+                  imageurl: { type: 'string', format: 'uri', example: 'https://example.com/product-image.jpg' },
+                  categoryID: { type: 'number', example: 1 }
+                },
+                required: ['name', 'description', 'imageurl', 'categoryID']
+              }
+            }
+          }
+        },
         responses: { '201': { description: 'Product created' }, '400': { description: 'Invalid request' } }
       }
     },
@@ -111,7 +297,22 @@ const swaggerDefinition = {
         tags: ['Products'],
         summary: 'Update a product by ID',
         parameters: [{ name: 'productID', in: 'path', required: true, schema: { type: 'string' } }],
-        requestBody: { required: true, content: { 'application/json': { schema: { type: 'object', additionalProperties: true } } } },
+        requestBody: {
+          required: true,
+          content: {
+            'application/json': {
+              schema: {
+                type: 'object',
+                properties: {
+                  name: { type: 'string', example: 'Updated Product Name' },
+                  description: { type: 'string', example: 'Updated product description' },
+                  imageurl: { type: 'string', format: 'uri', example: 'https://example.com/updated-image.jpg' },
+                  categoryID: { type: 'number', example: 2 }
+                }
+              }
+            }
+          }
+        },
         responses: { '200': { description: 'Product updated' }, '400': { description: 'Invalid request' } }
       }
     },
@@ -127,7 +328,7 @@ const swaggerDefinition = {
       post: {
         tags: ['Orders'],
         summary: 'Create a new order',
-        requestBody: { required: true, content: { 'application/json': { schema: { type: 'object', additionalProperties: true } } } },
+        requestBody: { required: true, content: { 'application/json': { schema: { $ref: '#/components/schemas/OrderInput' } } } },
         responses: { '201': { description: 'Order created' }, '400': { description: 'Invalid request' } }
       }
     },
@@ -151,7 +352,7 @@ const swaggerDefinition = {
         tags: ['Orders'],
         summary: 'Update an order',
         parameters: [{ name: 'orderId', in: 'path', required: true, schema: { type: 'string' } }],
-        requestBody: { required: true, content: { 'application/json': { schema: { type: 'object', additionalProperties: true } } } },
+        requestBody: { required: true, content: { 'application/json': { schema: { $ref: '#/components/schemas/OrderInput' } } } },
         responses: { '200': { description: 'Order updated' }, '400': { description: 'Invalid request' } }
       }
     },
@@ -167,7 +368,7 @@ const swaggerDefinition = {
       post: {
         tags: ['Service Types'],
         summary: 'Create a new service type',
-        requestBody: { required: true, content: { 'application/json': { schema: { type: 'object', additionalProperties: true } } } },
+        requestBody: { required: true, content: { 'application/json': { schema: { $ref: '#/components/schemas/ServiceTypeInput' } } } },
         responses: { '201': { description: 'Service type created' }, '400': { description: 'Invalid request' } }
       }
     },
@@ -191,7 +392,7 @@ const swaggerDefinition = {
         tags: ['Service Types'],
         summary: 'Update a service type',
         parameters: [{ name: 'serviceTypeId', in: 'path', required: true, schema: { type: 'string' } }],
-        requestBody: { required: true, content: { 'application/json': { schema: { type: 'object', additionalProperties: true } } } },
+        requestBody: { required: true, content: { 'application/json': { schema: { $ref: '#/components/schemas/ServiceTypeInput' } } } },
         responses: { '200': { description: 'Service type updated' }, '400': { description: 'Invalid request' } }
       }
     },
@@ -222,7 +423,7 @@ const swaggerDefinition = {
       post: {
         tags: ['Custom Requests'],
         summary: 'Create a custom request',
-        requestBody: { required: true, content: { 'application/json': { schema: { type: 'object', additionalProperties: true } } } },
+        requestBody: { required: true, content: { 'application/json': { schema: { $ref: '#/components/schemas/CustomRequestInput' } } } },
         responses: { '201': { description: 'Custom request created' }, '400': { description: 'Invalid request' } }
       }
     },
@@ -270,7 +471,7 @@ const swaggerDefinition = {
         tags: ['Custom Requests'],
         summary: 'Update a custom request',
         parameters: [{ name: 'requestId', in: 'path', required: true, schema: { type: 'string' } }],
-        requestBody: { required: true, content: { 'application/json': { schema: { type: 'object', additionalProperties: true } } } },
+        requestBody: { required: true, content: { 'application/json': { schema: { $ref: '#/components/schemas/CustomRequestInput' } } } },
         responses: { '200': { description: 'Custom request updated' }, '400': { description: 'Invalid request' } }
       }
     },
@@ -334,7 +535,7 @@ const swaggerDefinition = {
       post: {
         tags: ['Emails'],
         summary: 'Send payment successful email',
-        requestBody: { required: true, content: { 'application/json': { schema: { type: 'object', additionalProperties: true } } } },
+        requestBody: { required: true, content: { 'application/json': { schema: { $ref: '#/components/schemas/PaymentSuccessfulEmail' } } } },
         responses: { '200': { description: 'Email sent' } }
       }
     },
@@ -342,7 +543,7 @@ const swaggerDefinition = {
       post: {
         tags: ['Emails'],
         summary: 'Send order delivered email',
-        requestBody: { required: true, content: { 'application/json': { schema: { type: 'object', additionalProperties: true } } } },
+        requestBody: { required: true, content: { 'application/json': { schema: { $ref: '#/components/schemas/OrderDeliveredEmail' } } } },
         responses: { '200': { description: 'Email sent' } }
       }
     },
@@ -350,7 +551,7 @@ const swaggerDefinition = {
       post: {
         tags: ['Emails'],
         summary: 'Send welcome email',
-        requestBody: { required: true, content: { 'application/json': { schema: { type: 'object', additionalProperties: true } } } },
+        requestBody: { required: true, content: { 'application/json': { schema: { $ref: '#/components/schemas/WelcomeEmail' } } } },
         responses: { '200': { description: 'Email sent' } }
       }
     },
@@ -358,7 +559,7 @@ const swaggerDefinition = {
       post: {
         tags: ['Emails'],
         summary: 'Send abandoned cart reminder email',
-        requestBody: { required: true, content: { 'application/json': { schema: { type: 'object', additionalProperties: true } } } },
+        requestBody: { required: true, content: { 'application/json': { schema: { $ref: '#/components/schemas/AbandonedCartEmail' } } } },
         responses: { '200': { description: 'Email sent' } }
       }
     },
@@ -444,7 +645,7 @@ const swaggerDefinition = {
         tags: ['Payments'],
         summary: 'Update a payment',
         parameters: [{ name: 'paymentId', in: 'path', required: true, schema: { type: 'string' } }],
-        requestBody: { required: true, content: { 'application/json': { schema: { type: 'object', additionalProperties: true } } } },
+        requestBody: { required: true, content: { 'application/json': { schema: { $ref: '#/components/schemas/PaymentInput' } } } },
         responses: { '200': { description: 'Payment updated' }, '404': { description: 'Payment not found' }, '500': { description: 'Server error' } }
       },
       delete: {

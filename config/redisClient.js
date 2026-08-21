@@ -55,6 +55,7 @@ const safeRedis = new Proxy({}, {
         return await value.apply(redisClient, args);
       } catch (error) {
         console.warn(`Redis operation failed (${String(prop)}):`, error.message);
+        redisClient = null;
         if (prop === 'keys') return [];
         if (prop === 'get') return null;
         if (prop === 'set') return true;

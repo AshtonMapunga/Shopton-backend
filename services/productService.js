@@ -1,14 +1,20 @@
-const Product = require("../models/product/products_schema"); // Adjust the path according to your file structure
+const mongoose = require("mongoose");
+const Product = require("../models/product/products_schema");
 const CACHE_KEY = "products_cache";
 const redis = require("../config/redisClient");
 
 
 // Create a new class
-const creaProduct = async (productData) => {
+const createProduct = async (productData = {}) => {
   try {
-    const newProduct = new Product(productData)
+    const normalizedData = {
+      ...productData,
+      imageurl: productData.imageurl || productData.imageUrl,
+      categoryID: productData.categoryID ?? productData.categoryId,
+    };
+    const newProduct = new Product(normalizedData);
     await newProduct.save();
-      await redis.del("products_cache");
+    await redis.del(CACHE_KEY);
     return newProduct;
   } catch (error) {
     throw new Error("Error creating product: " + error.message);
@@ -43,12 +49,24 @@ const getAllProduct = async () => {
 // Update a class by ID
 const updateProduct = async (productID, updateData) => {
   try {
-    const updatedProduct = await Product.findByIdAndUpdate(productID, updateData, { new: true });
+    if (!mongoose.isValidObjectId(productID)) {
+      throw new Error("Invalid product ID");
+    }
+
+    const updatedProduct = await Product.findByIdAndUpdate(
+      productID,
+      {
+        ...updateData,
+        ...(updateData.imageUrl ? { imageurl: updateData.imageUrl } : {}),
+        ...(updateData.categoryId !== undefined ? { categoryID: updateData.categoryId } : {}),
+      },
+      { new: true, runValidators: true }
+    );
 
     if (!updatedProduct) {
       throw new Error("Product not found");
     }
-      await redis.del("products_cache");
+    await redis.del(CACHE_KEY);
     return updatedProduct;
   } catch (error) {
     throw new Error("Error updating Product: " + error.message);
@@ -58,11 +76,15 @@ const updateProduct = async (productID, updateData) => {
 // Delete a class by ID
 const deleteProduct = async (productID) => {
   try {
+    if (!mongoose.isValidObjectId(productID)) {
+      throw new Error("Invalid product ID");
+    }
+
     const deletedProduct = await Product.findByIdAndDelete(productID);
     if (!deletedProduct) {
-      throw new Error("Banner not found");
+      throw new Error("Product not found");
     }
-      await redis.del("products_cache");
+    await redis.del(CACHE_KEY);
     return deletedProduct;
   } catch (error) {
     throw new Error("Error deleting Product: " + error.message);
@@ -73,7 +95,8 @@ const deleteProduct = async (productID) => {
 
 
 module.exports = {
-  creaProduct,
+  createProduct,
+  creaProduct: createProduct,
   getAllProduct,
   updateProduct,
   deleteProduct,
