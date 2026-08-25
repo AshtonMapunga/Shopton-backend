@@ -275,9 +275,11 @@ const swaggerDefinition = {
                   name: { type: 'string', example: 'Sample Product' },
                   description: { type: 'string', example: 'Product description' },
                   imageurl: { type: 'string', format: 'uri', example: 'https://example.com/product-image.jpg' },
+                  imageUrl: { type: 'string', format: 'uri', example: 'https://example.com/product-image.jpg' },
+                  price: { type: 'number', format: 'float', example: 49.99, minimum: 0 },
                   categoryID: { type: 'number', example: 1 }
                 },
-                required: ['name', 'description', 'imageurl', 'categoryID']
+                required: ['name', 'description', 'imageurl', 'price', 'categoryID']
               }
             }
           }
@@ -307,6 +309,8 @@ const swaggerDefinition = {
                   name: { type: 'string', example: 'Updated Product Name' },
                   description: { type: 'string', example: 'Updated product description' },
                   imageurl: { type: 'string', format: 'uri', example: 'https://example.com/updated-image.jpg' },
+                  imageUrl: { type: 'string', format: 'uri', example: 'https://example.com/updated-image.jpg' },
+                  price: { type: 'number', format: 'float', example: 59.99, minimum: 0 },
                   categoryID: { type: 'number', example: 2 }
                 }
               }

@@ -3,6 +3,16 @@ const Product = require("../models/product/products_schema");
 const CACHE_KEY = "products_cache";
 const redis = require("../config/redisClient");
 
+const toProductResponse = (product) => {
+  const response = product.toObject ? product.toObject() : { ...product };
+  const imageUrl = response.imageurl || response.imageUrl;
+
+  return {
+    ...response,
+    imageurl: imageUrl,
+    imageUrl,
+  };
+};
 
 // Create a new class
 const createProduct = async (productData = {}) => {
@@ -15,7 +25,7 @@ const createProduct = async (productData = {}) => {
     const newProduct = new Product(normalizedData);
     await newProduct.save();
     await redis.del(CACHE_KEY);
-    return newProduct;
+    return toProductResponse(newProduct);
   } catch (error) {
     throw new Error("Error creating product: " + error.message);
   }
@@ -29,7 +39,7 @@ const getAllProduct = async () => {
 
     if (cachedData) {
       console.log("🟢 Retrieved from Redis cache");
-      return cachedData; // ❌ DO NOT parse again
+      return cachedData.map(toProductResponse); // ❌ DO NOT parse again
     }
 
     // If no cache, fetch from DB
@@ -39,7 +49,7 @@ const getAllProduct = async () => {
     await redis.set(CACHE_KEY, products, { ex: 3600 }); // ✅ No need to stringify
 
     console.log("🔵 Retrieved from MongoDB and cached");
-    return products;
+    return products.map(toProductResponse);
   } catch (error) {
     throw new Error("Error fetching products: " + error.message);
   }
@@ -67,7 +77,7 @@ const updateProduct = async (productID, updateData) => {
       throw new Error("Product not found");
     }
     await redis.del(CACHE_KEY);
-    return updatedProduct;
+    return toProductResponse(updatedProduct);
   } catch (error) {
     throw new Error("Error updating Product: " + error.message);
   }
